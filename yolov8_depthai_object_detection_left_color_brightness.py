@@ -13,8 +13,6 @@ camRgb = pipeline.create(dai.node.ColorCamera)
 monoLeft = pipeline.create(dai.node.MonoCamera)
 # monoRight = pipeline.create(dai.node.MonoCamera)
 
-
-
 xoutVideo = pipeline.create(dai.node.XLinkOut)
 xoutLeft = pipeline.create(dai.node.XLinkOut)
 # xoutRight = pipeline.create(dai.node.XLinkOut)
@@ -42,7 +40,7 @@ left = device.getOutputQueue(name="left", maxSize=1, blocking=False)
 
 
 # model
-model = YOLO("yolov8s.pt")
+model = YOLO("yolov8l.pt")
 
 # object classes
 classNames = ["person"]
@@ -53,6 +51,10 @@ fontScale = 1
 color = (255, 0, 0)
 thickness = 2
 
+#Initial brightness of IR led (range is 0 to 1)
+ir_led=0
+con=0.01
+
 while True:
     videoIn = video.get()
     img=videoIn.getCvFrame()
@@ -62,6 +64,8 @@ while True:
 
     leftIn = left.get()
     imgl=leftIn.getCvFrame()
+    brightness_ir=np.array(imgl).sum()
+    # print(brightness_ir)    
     imgl0=cv2.cvtColor(imgl, cv2.COLOR_GRAY2BGR)
     resultsl = model(imgl0, stream=True)
     
@@ -74,6 +78,15 @@ while True:
         imgs=[(img, results) ]
     else:
         imgs=[(imgl, resultsl)]
+
+    if brightness_ir<5e7 and ir_led<0.9:
+        ir_led=ir_led+con
+        device.setIrFloodLightIntensity(ir_led)
+    elif brightness_ir>7e7 and ir_led>con:
+        ir_led=ir_led-con
+        device.setIrFloodLightIntensity(ir_led)
+
+    print(ir_led)
 
     for img, results in imgs:
         # coordinates
@@ -105,12 +118,3 @@ while True:
 
 cv2.destroyAllWindows()
 
-# # Process results list
-# for result in results:
-#     boxes = result.boxes  # Boxes object for bounding box outputs
-#     masks = result.masks  # Masks object for segmentation masks outputs
-#     keypoints = result.keypoints  # Keypoints object for pose outputs
-#     probs = result.probs  # Probs object for classification outputs
-#     obb = result.obb  # Oriented boxes object for OBB outputs
-#     result.show()  # display to screen
-#     result.save(filename="result.jpg")  # save to disk
