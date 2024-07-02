@@ -89,7 +89,7 @@ while True:
     imgr0=cv2.cvtColor(imgr, cv2.COLOR_GRAY2BGR)
     resultsr = model(imgr0, stream=True)
 
-    imgs=[(img, results),(imgl, resultsl), (imgr, resultsr) ]
+    # imgs=[(img, results),(imgl, resultsl), (imgr, resultsr) ] # Color image is not working this case
     imgs=[(imgl, resultsl), (imgr, resultsr), (img, results) ]
 
     for img, results in imgs:
