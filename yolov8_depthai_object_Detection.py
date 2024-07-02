@@ -36,7 +36,7 @@ video = device.getOutputQueue(name="video", maxSize=1, blocking=False)
 
 
 # model
-model = YOLO("yolo-Weights/yolov8s.pt")
+model = YOLO("yolov8s.pt")
 
 # object classes
 classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "train", "truck", "boat",
