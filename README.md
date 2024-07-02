@@ -3,7 +3,7 @@
 
 - yolov8_depthai_object_detection_left_right_color.py: object detection with all three cameras
 
-- yolov8_depthai_object_detection_left_color_brightness.py: Depending on the overall brightness, camera used to detect objects is changed from color to mono. 
+- yolov8_depthai_object_detection_left_color_brightness.py: Depending on the overall brightness, camera used to detect objects is changed from color to mono and vice versa. 
 
 - yolov8_object_tracking_and_segmentation.py: object(only person) tracking and segmentation with oak-D
 
