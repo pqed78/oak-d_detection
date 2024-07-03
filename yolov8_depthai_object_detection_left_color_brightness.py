@@ -25,8 +25,8 @@ xoutLeft.setStreamName("left")
 camRgb.setBoardSocket(dai.CameraBoardSocket.CAM_A)
 monoLeft.setBoardSocket(dai.CameraBoardSocket.CAM_B)
 # monoRight.setBoardSocket(dai.CameraBoardSocket.CAM_C)
-
-
+# camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_720_P)
+monoLeft.setResolution(dai.MonoCameraProperties.SensorResolution.THE_400_P)
 # Linking
 camRgb.video.link(xoutVideo.input)
 monoLeft.out.link(xoutLeft.input)
@@ -40,7 +40,7 @@ left = device.getOutputQueue(name="left", maxSize=1, blocking=False)
 
 
 # model
-model = YOLO("yolov8l.pt")
+model = YOLO("yolov8n.pt")
 
 # object classes
 classNames = ["person"]
@@ -53,17 +53,19 @@ thickness = 2
 
 #Initial brightness of IR led (range is 0 to 1)
 ir_led=0
-con=0.01
+var=0.01
 
 while True:
     videoIn = video.get()
     img=videoIn.getCvFrame()
+    # print(img.shape)
     brightness_color=np.array(img).sum()
     
     results = model(img, stream=True)
 
     leftIn = left.get()
     imgl=leftIn.getCvFrame()
+    # print(imgl.shape)
     brightness_ir=np.array(imgl).sum()
     # print(brightness_ir)    
     imgl0=cv2.cvtColor(imgl, cv2.COLOR_GRAY2BGR)
@@ -74,16 +76,16 @@ while True:
     # imgr0=cv2.cvtColor(imgr, cv2.COLOR_GRAY2BGR)
     # resultsr = model(imgr0, stream=True)
 
-    if brightness_color>1e8:
+    if brightness_color>1e7:
         imgs=[(img, results) ]
     else:
         imgs=[(imgl, resultsl)]
 
-    if brightness_ir<5e7 and ir_led<0.9:
-        ir_led=ir_led+con
+    if brightness_ir<1e7 and ir_led<0.9:
+        ir_led=ir_led+var
         device.setIrFloodLightIntensity(ir_led)
-    elif brightness_ir>7e7 and ir_led>con:
-        ir_led=ir_led-con
+    elif brightness_ir>2e7 and ir_led>(var-0.001):
+        ir_led=ir_led-var
         device.setIrFloodLightIntensity(ir_led)
 
     print(ir_led)
@@ -108,7 +110,7 @@ while True:
         img_view=img
     else:
         img_view=imgl
-
+    img_view=cv2.resize(img_view, (640, int(640/1.8)), cv2.INTER_AREA)
     cv2.imshow('Oak-D', img_view)
 
 
