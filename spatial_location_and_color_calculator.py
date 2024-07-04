@@ -104,7 +104,7 @@ with dai.Device(pipeline) as device:
         depthFrameColor = np.interp(depthFrame, (min_depth, max_depth), (0, 255)).astype(np.uint8)
         depthFrameColor = cv2.applyColorMap(depthFrameColor, cv2.COLORMAP_HOT)
         spatialData = spatialCalcQueue.get().getSpatialLocations()
-
+        print(spatialData[0].spatialCoordinates.z)
 
         for depthData in spatialData:
             roi = depthData.config.roi
@@ -113,6 +113,7 @@ with dai.Device(pipeline) as device:
             ymin = int(roi.topLeft().y) # unit in pixel
             xmax = int(roi.bottomRight().x) # unit in pixel
             ymax = int(roi.bottomRight().y) # unit in pixel
+
 
             
 

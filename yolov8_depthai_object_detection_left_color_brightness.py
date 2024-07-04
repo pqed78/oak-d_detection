@@ -88,6 +88,10 @@ while True:
         ir_led=ir_led-var
         device.setIrFloodLightIntensity(ir_led)
 
+    if np.abs(ir_led)<0.001:
+        ir_led=0
+        device.setIrFloodLightIntensity(ir_led)
+
     print(ir_led)
 
     for img, results in imgs:
