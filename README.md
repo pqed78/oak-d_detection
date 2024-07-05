@@ -5,6 +5,7 @@
 
 - yolov8_depthai_object_detection_left_color_brightness.py: Depending on the overall brightness, camera used to detect objects is changed from color to mono and vice versa. IR led control added.
 
+- yolov8_depthai_object_detection_left_color_brightness.py: Depending on the overall brightness, camera used to detect object is changed from color to mono and vice versa with the distance in the surface normal direction between the camera and object. 
 - yolov8_object_tracking_and_segmentation.py: object(only person) tracking and segmentation with oak-D
 
 
