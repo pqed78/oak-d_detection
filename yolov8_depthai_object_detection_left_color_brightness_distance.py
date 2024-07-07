@@ -217,26 +217,6 @@ while True:
                     cv2.putText(img, f"Z: {zmin} mm", (xmin + 10, ymin + int(3*fontScale2*30)), font, int(fontScale2), color, int(thickness2))
 
 
-
-
-                    #     # print(x1)
-                    #     # spatialData.
-                    #     cv2.putText(img, f"X: {int(spatialData[0].spatialCoordinates.x)} mm", (x1 + 10, y1 + 50), font, fontScale, color, thickness)
-                    #     cv2.putText(img, f"Y: {int(spatialData[0].spatialCoordinates.y)} mm", (x1 + 10, y1 + 130), font, fontScale, color, thickness)
-                    #     cv2.putText(img, f"Z: {int(spatialData[0].spatialCoordinates.z)} mm", (x1 + 10, y1 + 230), font, fontScale, color, thickness)
-
-                    # else:
-                    #     cv2.rectangle(img, (x1, y1), (x2, y2), (255, 255, 255), 2)
-                    #     cv2.putText(img, classNames[cls], org, font, int(fontScale/2), color, int(thickness/2))
-                    
-                    # alpha=alpha0
-                    # alpha0=int(spatialData[0].spatialCoordinates.z)
-                    # print(alpha0, alpha)
-
-                # time.sleep(0.1)
-
-                    
-
     
     if brightness_color>1e7:
         img_view=img
