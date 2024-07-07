@@ -17,12 +17,12 @@ xoutVideo.setStreamName("video")
 
 # Properties
 camRgb.setBoardSocket(dai.CameraBoardSocket.CAM_A)
-# camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_1080_P)
-# camRgb.setVideoSize(1920, 1080)
+camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_1080_P)
+camRgb.setVideoSize(1920, 1080)
 
-#For wide camera
-camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_800_P)
-camRgb.setVideoSize(1280, 800)
+# #For wide camera
+# camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_800_P)
+# camRgb.setVideoSize(1280, 800)
 
 
 xoutVideo.input.setBlocking(False)

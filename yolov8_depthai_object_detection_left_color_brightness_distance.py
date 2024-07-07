@@ -56,7 +56,7 @@ calculationAlgorithm = dai.SpatialLocationCalculatorAlgorithm.MEDIAN
 
 spatialLocationCalculator.inputConfig.setWaitForMessage(False)
 spatialLocationCalculator.initialConfig.addROI(config)
-depth_area_scale=0.2
+depth_area_scale=0.5
 
 
 # Linking
@@ -99,7 +99,7 @@ gap=100
 ir_led=0
 var=0.01
 
-device.setIrLaserDotProjectorBrightness(500)
+device.setIrLaserDotProjectorBrightness(0)
 while True:
     videoIn = video.get()
     img=videoIn.getCvFrame()
@@ -136,10 +136,10 @@ while True:
     else:
         imgs=[(imgl, resultsl, stereo.setDepthAlign(dai.CameraBoardSocket.CAM_B))]
 
-    if brightness_ir<1e7 and ir_led<0.9:
+    if brightness_ir<1e8 and ir_led<0.9:
         ir_led=ir_led+var
         device.setIrFloodLightIntensity(ir_led)
-    elif brightness_ir>2e7 and ir_led>(var-0.001):
+    elif brightness_ir>5e7 and ir_led>(var-0.001):
         ir_led=ir_led-var
         device.setIrFloodLightIntensity(ir_led)
 
@@ -202,19 +202,19 @@ while True:
         # print(img.shape[0])
                     if img.shape[0]==720:
                         fontScale2=fontScale/2
-                        thickness2=thickness/2
-                        gap2=gap/2
+                        thickness2=thickness
+                        # gap2=gap/3
                     elif img.shape[0]==1080:
                         fontScale2=fontScale
                         thickness2=thickness
-                        gap2=gap
+                        # gap2=gap
 
                 
                     cv2.rectangle(img, (xmin, ymin), (xmax, ymax), (255, 255, 255), 2)    
-                    cv2.putText(img, classNames[0], (xmin, ymin), font, int(fontScale2),color, int(thickness2))
-                    cv2.putText(img, f"X: {xcen} mm", (xmin + 10, ymin + 50), font, int(fontScale2), color, int(thickness2))
-                    cv2.putText(img, f"Y: {ycen} mm", (xmin + 10, ymin + int(gap2)), font, int(fontScale2), color, int(thickness2))
-                    cv2.putText(img, f"Z: {zmin} mm", (xmin + 10, ymin + int(2*gap2)), font, int(fontScale2), color, int(thickness2))
+                    cv2.putText(img, classNames[0], (xmin, ymin-int(fontScale2*30)), font, int(fontScale2),color, int(thickness2))
+                    cv2.putText(img, f"X: {xcen} mm", (xmin + 10, ymin + int(fontScale2*30)), font, int(fontScale2), color, int(thickness2))
+                    cv2.putText(img, f"Y: {ycen} mm", (xmin + 10, ymin + int(2*fontScale2*30)), font, int(fontScale2), color, int(thickness2))
+                    cv2.putText(img, f"Z: {zmin} mm", (xmin + 10, ymin + int(3*fontScale2*30)), font, int(fontScale2), color, int(thickness2))
 
 
 
