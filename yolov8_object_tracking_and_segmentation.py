@@ -55,31 +55,28 @@ while True:
     videoIn = video.get()
     im0=videoIn.getCvFrame()
     
-    # Create an annotator object to draw on the frame
-    annotator = Annotator(im0, line_width=2)
+
 
     # Perform object tracking on the current frame
     results = model.track(im0, persist=True)
+    # print(results[0].boxes.id)
+    
+    for r in results:
+            
+        alpha=(r.boxes.cls==0).nonzero()
+        if len(alpha)>0 and r.boxes.id is not None and r.masks is not None:
+            for mask, box in zip (r.masks[alpha], r.boxes[alpha]):  
 
-    for r in results[0]:
-        boxes=r.boxes
-
-        for box in boxes:
-            cls = int(box.cls[0])
-            if cls ==0:
-        # print(results[0].boxes.id)
-        # Check if tracking IDs and masks are present in the results
-            # if r.boxes.id is not None and r.masks is not None: #To track only person
-                # Extract masks and tracking IDs
-                masks = r.masks.xy
-                # if int(results[0].boxes.cls.sort()[0][0])==0: #사람이 인식될 경우만 획득
-                track_ids = r.boxes.id.int().cpu().tolist()
-                print(track_ids)
-                # print(track_ids)
-                # Annotate each mask with its corresponding tracking ID and color
+                # Create an annotator object to draw on the frame
+                annotator = Annotator(im0, line_width=2)
+    #         # Extract masks and tracking IDs
+                masks = mask.xy
+                track_ids = box.id.int().cpu().tolist()
+                # # Annotate each mask with its corresponding tracking ID and color
                 for mask, track_id in zip(masks, track_ids):
                     annotator.seg_bbox(mask=mask, mask_color=colors(track_id, True), track_label=str(track_id))
 
+    im0=cv2.resize(im0, (640, int(640/1.8)), cv2.INTER_AREA)
 
     cv2.imshow("instance-segmentation-object-tracking", im0)
 

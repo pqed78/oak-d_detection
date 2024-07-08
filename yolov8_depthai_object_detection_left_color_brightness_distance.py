@@ -99,7 +99,7 @@ gap=100
 ir_led=0
 var=0.01
 
-device.setIrLaserDotProjectorBrightness(0)
+
 while True:
     videoIn = video.get()
     img=videoIn.getCvFrame()
@@ -118,23 +118,28 @@ while True:
     
     inDepth = depthQueue.get() # Blocking call, will wait until a new data has arrived
     depthFrame = inDepth.getFrame() # depthFrame values are in millimeters
-    print(depthFrame.shape)
-    depth_downscaled = depthFrame[::4]
-    if np.all(depth_downscaled == 0):
-        min_depth = 0  # Set a default minimum depth value when all elements are zero
-    else:
-        min_depth = np.percentile(depth_downscaled[depth_downscaled != 0], 1)
-    max_depth = np.percentile(depth_downscaled, 99)
-    depthFrameColor = np.interp(depthFrame, (min_depth, max_depth), (0, 255)).astype(np.uint8)
-    depthFrameColor = cv2.applyColorMap(depthFrameColor, cv2.COLORMAP_HOT)
+    # print(depthFrame.shape)
+
+    # depth_downscaled = depthFrame[::4]
+    # if np.all(depth_downscaled == 0):
+    #     min_depth = 0  # Set a default minimum depth value when all elements are zero
+    # else:
+    #     min_depth = np.percentile(depth_downscaled[depth_downscaled != 0], 1)
+    # max_depth = np.percentile(depth_downscaled, 99)
+    # depthFrameColor = np.interp(depthFrame, (min_depth, max_depth), (0, 255)).astype(np.uint8)
+    # depthFrameColor = cv2.applyColorMap(depthFrameColor, cv2.COLORMAP_HOT)
     spatialData = spatialCalcQueue.get().getSpatialLocations()
 
 
     
     if brightness_color>1e8:
-        imgs=[(img, results, stereo.setDepthAlign(dai.CameraBoardSocket.CAM_A)) ]
+        imgs=[(img, results)]
+        device.setIrLaserDotProjectorBrightness(100)
+        stereo.setDepthAlign(dai.CameraBoardSocket.CAM_A)
     else:
-        imgs=[(imgl, resultsl, stereo.setDepthAlign(dai.CameraBoardSocket.CAM_B))]
+        imgs=[(imgl, resultsl)]
+        stereo.setDepthAlign(dai.CameraBoardSocket.CAM_B)
+        device.setIrLaserDotProjectorBrightness(0)
 
     if brightness_ir<1e8 and ir_led<0.9:
         ir_led=ir_led+var
@@ -147,13 +152,13 @@ while True:
         ir_led=0
         device.setIrFloodLightIntensity(ir_led)
 
-    print(ir_led)
+    # print(ir_led)
 
     
 
     
 
-    for img, results, align in imgs:
+    for img, results in imgs:
 
         for r in results:
             alpha=(r.boxes.cls==0).nonzero()
@@ -223,7 +228,7 @@ while True:
     else:
         img_view=imgl
     img_view=cv2.resize(img_view, (640, int(640/1.8)), cv2.INTER_AREA)
-    align
+    
     cv2.imshow('Oak-D', img_view)
     # cv2.imshow('Oak-D2', depthFrameColor)
 
