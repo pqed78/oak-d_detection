@@ -165,8 +165,8 @@ while True:
             k=0
             if len(alpha)>0:
                 for i in range(len(alpha)):
-                    if np.array(r.boxes.xywh[alpha][i][0][2:]).sum()>k:
-                        k=np.array(r.boxes.xywh[alpha][i][0][2:]).sum()
+                    if np.array(r.boxes.xywh[alpha][i][0][2:].cpu()).sum()>k:
+                        k=np.array(r.boxes.xywh[alpha][i][0][2:].cpu()).sum()
                         index=i
                     
                 zmin=50
